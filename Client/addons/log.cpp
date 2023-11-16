@@ -5,33 +5,66 @@
 #include "../menu.h"
 #include "../settings.h"
 #include "../util.h"
+#include <time.h>
+#include <fstream>
 
-static int logPlayerStateKeybind = VK_I;
-static int savePlayerStateKeybind = VK_O;
-static bool isLoggingPlayerState = false;
+static int logKeybind = VK_J;
+static bool isLogging = false;
+static float logTimer = 0.1f;
+
+template <typename T> static void AddToMsg(std::string& msg, T value, const char *format) {
+    char buffer[0xFF];
+    sprintf_s(buffer, format, value);
+    msg += std::string(buffer) + ',';
+}
+
+static void LogMsg(std::string logMsg) {
+    std::time_t t = std::time(0);
+    std::tm time; 
+    localtime_s(&time, &t);
+
+    char formattedTime[0xFF];
+    sprintf_s(formattedTime, sizeof(formattedTime), "%02d:%02d", time.tm_min, time.tm_sec);
+
+    std::string filePath = "log.txt";
+    std::ofstream os(filePath.c_str(), std::ios_base::out | std::ios_base::app);
+    os << formattedTime << ',' << logMsg << '\n';
+    os.close();
+}
 
 static void LogTab() {
-    if (ImGui::Hotkey("Log Player State##log-player-state", &logPlayerStateKeybind)) {
-        Settings::SetSetting("player", "logPlayerStateKeybind", logPlayerStateKeybind);
-    }
-
-    if (ImGui::Hotkey("Save Player State##save-player-state", &savePlayerStateKeybind)) {
-        Settings::SetSetting("player", "savePlayerStateKeybind", savePlayerStateKeybind);
+    if (ImGui::Hotkey("Toggle Logging##toggle-logging", &logKeybind)) {
+        Settings::SetSetting("player", "logKeybind", logKeybind);
     }
 }
 
 static void OnTick(float deltaTime) {
-    if (Engine::IsKeyDown(logPlayerStateKeybind)) {
-        isLoggingPlayerState = !isLoggingPlayerState;
+    if (Engine::IsKeyDown(logKeybind)) {
+        isLogging = !isLogging;
     }
 
-    if (isLoggingPlayerState) {
-        
+    if (isLogging) {
+        auto pawn = Engine::GetPlayerPawn();
+        auto controller = Engine::GetPlayerController();
+
+        if (!pawn || !controller)
+            return;
+
+        auto ms = pawn->MovementState.GetValue();
+        auto p = pawn->Location;
+
+        std::string msg = "";
+        AddToMsg(msg, ms, "%d");
+        AddToMsg(msg, p.X, "%.2f");
+        AddToMsg(msg, p.Y, "%.2f");
+        AddToMsg(msg, p.Z, "%.2f");
+
+        LogMsg(msg);
     }
 }
 
 static void OnRender(IDirect3DDevice9 *) {
-    if (isLoggingPlayerState) {
+    if (isLogging) {
         const char *text = "Logging";
         const auto window = ImGui::BeginRawScene("##log-state");
         const auto &io = ImGui::GetIO();
@@ -49,17 +82,16 @@ static void OnRender(IDirect3DDevice9 *) {
 }
 
 bool Log::Initialize() {
-    logPlayerStateKeybind = Settings::GetSetting("player", "logPlayerStateKeybind", VK_I);
-    savePlayerStateKeybind = Settings::GetSetting("player", "savePlayerStateKeybind", VK_O);
-    isLoggingPlayerState = false;
+    logKeybind = Settings::GetSetting("player", "logKeybind", VK_J);
+    isLogging = false;
 
     Menu::AddTab("Log", LogTab);
     Engine::OnTick(OnTick);
     Engine::OnRenderScene(OnRender);
-    
+
     Engine::OnInput([](unsigned int &msg, int keycode) {
-        if (msg == WM_KEYDOWN && keycode == logPlayerStateKeybind) {
-            isLoggingPlayerState = !isLoggingPlayerState;
+        if (msg == WM_KEYDOWN && keycode == logKeybind) {
+            isLogging = !isLogging;
         }
     });
 
