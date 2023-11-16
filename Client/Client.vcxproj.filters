@@ -261,6 +261,9 @@
     <ClInclude Include="addons\misc.h">
       <Filter>Header Files\addons</Filter>
     </ClInclude>
+    <ClInclude Include="addons\log.h">
+      <Filter>Header Files\addons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -363,6 +366,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="addons\misc.cpp">
+      <Filter>Source Files\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="addons\log.cpp">
       <Filter>Source Files\addons</Filter>
     </ClCompile>
   </ItemGroup>
