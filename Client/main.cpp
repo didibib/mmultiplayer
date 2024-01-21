@@ -21,7 +21,8 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved) {
 
 		Settings::Load();
 
-		Addon *addons[] = {new Client(), new Trainer(), new Dolly(), new Misc(), new Log()};
+		//Addon *addons[] = {new Client(), new Trainer(), new Dolly(), new Misc(), new Log()};
+		Addon *addons[] = {new Trainer(), new Log()};
 
 		if (!Engine::Initialize()) {
 			MessageBoxA(0, "Failed to initialize engine", "Fatal", 0);
