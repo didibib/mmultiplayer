@@ -170,7 +170,7 @@
   <ItemGroup>
     <ClInclude Include="addons\client.h" />
     <ClInclude Include="addons\dolly.h" />
-    <ClInclude Include="addons\log.h" />
+    <ClInclude Include="addons\logging.h" />
     <ClInclude Include="addons\misc.h" />
     <ClInclude Include="addons\trainer.h" />
     <ClInclude Include="engine.h" />
@@ -181,6 +181,7 @@
     <ClInclude Include="imgui\imgui_impl_dx9.h" />
     <ClInclude Include="imgui\imgui_impl_win32.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imgui_stdlib.h" />
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
@@ -247,7 +248,7 @@
   <ItemGroup>
     <ClCompile Include="addons\client.cpp" />
     <ClCompile Include="addons\dolly.cpp" />
-    <ClCompile Include="addons\log.cpp" />
+    <ClCompile Include="addons\logging.cpp" />
     <ClCompile Include="addons\misc.cpp" />
     <ClCompile Include="addons\trainer.cpp" />
     <ClCompile Include="engine.cpp" />
@@ -256,6 +257,7 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_dx9.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_stdlib.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />

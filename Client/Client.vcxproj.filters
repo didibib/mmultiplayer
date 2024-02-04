@@ -261,8 +261,11 @@
     <ClInclude Include="addons\misc.h">
       <Filter>Header Files\addons</Filter>
     </ClInclude>
-    <ClInclude Include="addons\log.h">
+    <ClInclude Include="addons\logging.h">
       <Filter>Header Files\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_stdlib.h">
+      <Filter>Source Files\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,8 +371,11 @@
     <ClCompile Include="addons\misc.cpp">
       <Filter>Source Files\addons</Filter>
     </ClCompile>
-    <ClCompile Include="addons\log.cpp">
+    <ClCompile Include="addons\logging.cpp">
       <Filter>Source Files\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_stdlib.cpp">
+      <Filter>Source Files\imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

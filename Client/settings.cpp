@@ -9,7 +9,7 @@ static std::string GetSettingsPath() {
 	char path[MAX_PATH];
 	GetTempPathA(sizeof(path), path);
 
-	return std::string(path) + "mmultiplayer.settings";
+	return /*std::string(path) + */"mmultiplayer.settings";
 }
 
 void Settings::SetSetting(const char *menu, const char *key, json value) {
