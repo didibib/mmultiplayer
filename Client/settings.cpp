@@ -65,7 +65,7 @@ void Settings::Save() {
 		return;
 	}
 
-	auto dump = settings.dump();
+	auto dump = settings.dump(4);
 	file.write(dump.c_str(), dump.size());
 	file.close();
 }

@@ -173,6 +173,7 @@
     <ClInclude Include="addons\logging.h" />
     <ClInclude Include="addons\misc.h" />
     <ClInclude Include="addons\trainer.h" />
+    <ClInclude Include="date.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="addon.h" />
     <ClInclude Include="hook.h" />
@@ -282,6 +283,9 @@
     <ClCompile Include="SDK\ME_WinDrv_functions.cpp" />
     <ClCompile Include="settings.cpp" />
     <ClCompile Include="debug.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

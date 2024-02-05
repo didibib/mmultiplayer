@@ -63,7 +63,7 @@
 // Calculates the distance and returns a float value in meters
 inline static float Distance(Classes::FVector from, Classes::FVector to) 
 { 
-	return sqrt(((from.X - to.X) * (from.X - to.X)) + ((from.Y - to.Y) * (from.Y - to.Y)) + ((from.Z - to.Z) * (from.Z - to.Z))) / 100;
+	return sqrt(((from.X - to.X) * (from.X - to.X)) + ((from.Y - to.Y) * (from.Y - to.Y)) + ((from.Z - to.Z) * (from.Z - to.Z))) * 0.01f;
 }
 
 static INPUT input = {0};

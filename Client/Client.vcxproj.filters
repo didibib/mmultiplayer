@@ -267,6 +267,9 @@
     <ClInclude Include="imgui\imgui_stdlib.h">
       <Filter>Source Files\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="date.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -377,5 +380,8 @@
     <ClCompile Include="imgui\imgui_stdlib.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

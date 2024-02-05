@@ -14,7 +14,7 @@ static bool tooltip = true;
 static bool god = false;
 static bool kg = false;
 static bool beamer = false;
-static bool strang = false; 
+static bool strang = false;
 static bool resetFlyingSpeed = true;
 static bool toggleResetKeybinds = false;
 
@@ -36,7 +36,7 @@ static int strangKeybind = VK_NONE;
 static int sidestepBeamerLeftKeybind = VK_A;
 static int sidestepBeamerRightKeybind = VK_D;
 
-static bool showPlayerInfo = false; 
+static bool showPlayerInfo = false;
 static bool showTopHeightInfo = false;
 static bool showExtraPlayerInfo = false;
 
@@ -198,8 +198,7 @@ static void Save(Trainer::Save &save, Classes::ATdPlayerPawn *pawn,
         save.Pawn.bCollideWorld = true;
         save.Pawn.bConstrainLook = false;
         save.Pawn.MovementState = Classes::EMovement::MOVE_Walking;
-        save.Pawn.CollisionType =
-            Classes::ECollisionType::COLLIDE_TouchAllButWeapons;
+        save.Pawn.CollisionType = Classes::ECollisionType::COLLIDE_TouchAllButWeapons;
         save.Pawn.Physics = Classes::EPhysics::PHYS_Walking;
         save.Controller.bIgnoreLookInput = false;
         save.Controller.bIgnoreMoveInput = false;
@@ -211,7 +210,7 @@ static void Save(Trainer::Save &save, Classes::ATdPlayerPawn *pawn,
 
 static void Load(Trainer::Save &save, Classes::ATdPlayerPawn *pawn,
                  Classes::ATdPlayerController *controller) {
-    
+
     if (pawn->bCutsceneIsSkippable) {
         return;
     }
@@ -355,16 +354,20 @@ static void Load(Trainer::Save &save, Classes::ATdPlayerPawn *pawn,
 }
 
 static void TrainerTab() {
-    #pragma region Player
+#pragma region Player
     if (ImGui::Checkbox("Show Player Info", &showPlayerInfo)) {
         Settings::SetSetting("player", "showInfo", showPlayerInfo);
     }
 
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_None)) {
         if (showTopHeightInfo) {
-            ImGui::SetTooltip("X = Location X\nY = Location Y\nZ = Location Z\nZT = Location Z Top\n \nV = Velocity\nVT = Velocity Top\n \nRX = Rotation Pitch\nRY = Rotation Yaw\n \nT = Time");
+            ImGui::SetTooltip("X = Location X\nY = Location Y\nZ = Location Z\nZT = Location Z "
+                              "Top\n \nV = Velocity\nVT = Velocity Top\n \nRX = Rotation Pitch\nRY "
+                              "= Rotation Yaw\n \nT = Time");
         } else {
-            ImGui::SetTooltip("X = Location X\nY = Location Y\nZ = Location Z\n \nV = Velocity\nVT = Velocity Top\n \nRX = Rotation Pitch\nRY = Rotation Yaw\n \nT = Time");
+            ImGui::SetTooltip(
+                "X = Location X\nY = Location Y\nZ = Location Z\n \nV = Velocity\nVT = Velocity "
+                "Top\n \nRX = Rotation Pitch\nRY = Rotation Yaw\n \nT = Time");
         }
     }
 
@@ -380,7 +383,9 @@ static void TrainerTab() {
         }
 
         if (ImGui::IsItemHovered(ImGuiHoveredFlags_None)) {
-            ImGui::SetTooltip("S = Movement State (Enum)\nH = Health\nRT = Reaction Time Energy\n \nSZ = Stored Z (LastJumpLocation.Z)\nSZD = Delta of Location.Z - LastJumpLocation.Z");
+            ImGui::SetTooltip(
+                "S = Movement State (Enum)\nH = Health\nRT = Reaction Time Energy\n \nSZ = Stored "
+                "Z (LastJumpLocation.Z)\nSZD = Delta of Location.Z - LastJumpLocation.Z");
         }
     }
 
@@ -392,7 +397,8 @@ static void TrainerTab() {
     }
 
     if (!(Engine::GetTimeTrialGame() || controller->ReactionTimeEnergy >= 100.0f ||
-        controller->bReactionTime ||  pawn->MovementState == Classes::EMovement::MOVE_FallingUncontrolled)) {
+          controller->bReactionTime ||
+          pawn->MovementState == Classes::EMovement::MOVE_FallingUncontrolled)) {
 
         ImGui::Dummy(ImVec2(0.0f, 6.0f));
 
@@ -405,7 +411,7 @@ static void TrainerTab() {
     }
 
     ImGui::SeperatorWithPadding(2.5f);
-    #pragma endregion
+#pragma endregion
 
     if (ImGui::Checkbox("Trainer Enabled##trainer-enabled", &enabled)) {
         Settings::SetSetting("trainer", "enabled", enabled);
@@ -426,7 +432,7 @@ static void TrainerTab() {
 
     ImGui::SeperatorWithPadding(2.5f);
 
-    #pragma region Reset
+#pragma region Reset
     if (hasSave) {
         if (ImGui::Button("Reset Save##trainer-reset-save")) {
             hasSave = false;
@@ -454,69 +460,84 @@ static void TrainerTab() {
     }
 
     if (tooltip && ImGui::IsItemHovered(ImGuiHoveredFlags_None)) {
-        ImGui::SetTooltip("Resets the flying speed back to normal once flying has been activated.\nIf set to false, the speed will not be reset");
+        ImGui::SetTooltip("Resets the flying speed back to normal once flying has been "
+                          "activated.\nIf set to false, the speed will not be reset");
     }
-    #pragma endregion
+#pragma endregion
 
-    #pragma region SidestepBeamer
+#pragma region SidestepBeamer
     if (ImGui::Checkbox("Sidestep Beamer##trainer-beamer-sidestep", &sidestepBeamer)) {
         Settings::SetSetting("trainer", "sidestepBeamer", sidestepBeamer);
     }
-    
+
     if (sidestepBeamer) {
-        if (ImGui::Checkbox("Auto Sidestep Beamer##trainer-beamer-sidestepForMe", &sidestepBeamerForMe)) {
+        if (ImGui::Checkbox("Auto Sidestep Beamer##trainer-beamer-sidestepForMe",
+                            &sidestepBeamerForMe)) {
             Settings::SetSetting("trainer", "sidestepBeamerForMe", sidestepBeamerForMe);
         }
 
         if (tooltip && ImGui::IsItemHovered(ImGuiHoveredFlags_None)) {
-            ImGui::SetTooltip("If set to false, you need to manually hold your left keybind or right keybind when beamer is active");
-        } 
+            ImGui::SetTooltip("If set to false, you need to manually hold your left keybind or "
+                              "right keybind when beamer is active");
+        }
 
         if (sidestepBeamerForMe) {
             ImGui::Dummy(ImVec2(0.0f, 6.0f));
 
-            if (ImGui::RadioButton("Press Left Keybind##trainer-sidestepBeamerLeft", sidestepBeamerPressLeftKeybind)) {
-                Settings::SetSetting("trainer", "sidestepBeamerPressRightKeybind", sidestepBeamerPressRightKeybind = false);
-                Settings::SetSetting("trainer", "sidestepBeamerPressLeftKeybind", sidestepBeamerPressLeftKeybind = true);
+            if (ImGui::RadioButton("Press Left Keybind##trainer-sidestepBeamerLeft",
+                                   sidestepBeamerPressLeftKeybind)) {
+                Settings::SetSetting("trainer", "sidestepBeamerPressRightKeybind",
+                                     sidestepBeamerPressRightKeybind = false);
+                Settings::SetSetting("trainer", "sidestepBeamerPressLeftKeybind",
+                                     sidestepBeamerPressLeftKeybind = true);
             }
-            
-            if (ImGui::RadioButton("Press Right Keybind##trainer-sidestepBeamerRight", sidestepBeamerPressRightKeybind)) {
-                Settings::SetSetting("trainer", "sidestepBeamerPressRightKeybind", sidestepBeamerPressRightKeybind = true);
-                Settings::SetSetting("trainer", "sidestepBeamerPressLeftKeybind", sidestepBeamerPressLeftKeybind = false);
+
+            if (ImGui::RadioButton("Press Right Keybind##trainer-sidestepBeamerRight",
+                                   sidestepBeamerPressRightKeybind)) {
+                Settings::SetSetting("trainer", "sidestepBeamerPressRightKeybind",
+                                     sidestepBeamerPressRightKeybind = true);
+                Settings::SetSetting("trainer", "sidestepBeamerPressLeftKeybind",
+                                     sidestepBeamerPressLeftKeybind = false);
             }
 
             ImGui::Dummy(ImVec2(0.0f, 6.0f));
 
-            if (ImGui::Hotkey("Left Keybind##trainer-sidestepBeamerLeftKeybind", &sidestepBeamerLeftKeybind)) {
-                Settings::SetSetting("trainer", "sidestepBeamerLeftKeybind", sidestepBeamerLeftKeybind);
+            if (ImGui::Hotkey("Left Keybind##trainer-sidestepBeamerLeftKeybind",
+                              &sidestepBeamerLeftKeybind)) {
+                Settings::SetSetting("trainer", "sidestepBeamerLeftKeybind",
+                                     sidestepBeamerLeftKeybind);
             }
 
             if (toggleResetKeybinds) {
                 ImGui::SameLine();
 
                 if (ImGui::Button("Reset##trainer-reset-sidestepBeamerLeftKeybind")) {
-                    Settings::SetSetting("trainer", "sidestepBeamerLeftKeybind", sidestepBeamerLeftKeybind = VK_A);
+                    Settings::SetSetting("trainer", "sidestepBeamerLeftKeybind",
+                                         sidestepBeamerLeftKeybind = VK_A);
                 }
             }
 
-            if (ImGui::Hotkey("Right Keybind##trainer-sidestepBeamerRightKeybind", &sidestepBeamerRightKeybind)) {
-                Settings::SetSetting("trainer", "sidestepBeamerRightKeybind", sidestepBeamerRightKeybind);
+            if (ImGui::Hotkey("Right Keybind##trainer-sidestepBeamerRightKeybind",
+                              &sidestepBeamerRightKeybind)) {
+                Settings::SetSetting("trainer", "sidestepBeamerRightKeybind",
+                                     sidestepBeamerRightKeybind);
             }
 
             if (toggleResetKeybinds) {
                 ImGui::SameLine();
 
                 if (ImGui::Button("Reset##trainer-reset-sidestepBeamerRightKeybind")) {
-                    Settings::SetSetting("trainer", "sidestepBeamerRightKeybind", sidestepBeamerRightKeybind = VK_D);
+                    Settings::SetSetting("trainer", "sidestepBeamerRightKeybind",
+                                         sidestepBeamerRightKeybind = VK_D);
                 }
             }
         }
     }
-    #pragma endregion
+#pragma endregion
 
     ImGui::SeperatorWithPadding(2.5f);
 
-    #pragma region Keybinds
+#pragma region Keybinds
     if (ImGui::Hotkey("God##trainer-god", &godKeybind)) {
         Settings::SetSetting("trainer", "godKeybind", godKeybind);
     }
@@ -664,7 +685,7 @@ static void TrainerTab() {
             Settings::SetSetting("trainer", "strangKeybind", strangKeybind = VK_NONE);
         }
     }
-    #pragma endregion
+#pragma endregion
 
     ImGui::SeperatorWithPadding(2.5f);
 
@@ -674,11 +695,14 @@ static void TrainerTab() {
 }
 
 template <typename T>
-void AddTextToDrawList(ImDrawList* drawList, float width, float rightPadding, float& y, float yIncrement, ImColor color, const char* label, const char* format, T value) {
+void AddTextToDrawList(ImDrawList *drawList, float width, float rightPadding, float &y,
+                       float yIncrement, ImColor color, const char *label, const char *format,
+                       T value) {
     char buffer[0xFF];
     sprintf_s(buffer, format, value);
 
-    drawList->AddText(ImVec2(width - ImGui::CalcTextSize(buffer, nullptr, false).x, y), color, buffer);
+    drawList->AddText(ImVec2(width - ImGui::CalcTextSize(buffer, nullptr, false).x, y), color,
+                      buffer);
     drawList->AddText(ImVec2(width - rightPadding, y), color, label);
 
     y += yIncrement;
@@ -700,19 +724,27 @@ static void OnRender(IDirect3DDevice9 *) {
 
             auto yIncrement = ImGui::GetTextLineHeight();
             auto count = (showTopHeightInfo ? 1 : 0) + (showExtraPlayerInfo ? 13 : 8);
-            auto y = io.DisplaySize.y - (count * yIncrement) - padding - ((yIncrement / 2) * (showExtraPlayerInfo ? 4: 3));
+            auto y = io.DisplaySize.y - (count * yIncrement) - padding -
+                     ((yIncrement / 2) * (showExtraPlayerInfo ? 4 : 3));
             auto color = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-            window->DrawList->AddRectFilled(ImVec2(width - rightPadding - padding, y - (padding / 2)), io.DisplaySize, ImColor(ImVec4(0, 0, 0, 0.4f)));
+            window->DrawList->AddRectFilled(
+                ImVec2(width - rightPadding - padding, y - (padding / 2)), io.DisplaySize,
+                ImColor(ImVec4(0, 0, 0, 0.4f)));
 
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "X", "%.2f", pawn->Location.X / 100.0f);
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "Y", "%.2f", pawn->Location.Y / 100.0f);
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + (showTopHeightInfo ? 0 : yIncrement / 2), color, "Z", "%.2f", pawn->Location.Z / 100.0f);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "X",
+                              "%.2f", pawn->Location.X * 0.01f);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "Y",
+                              "%.2f", pawn->Location.Y * 0.01f);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y,
+                              yIncrement + (showTopHeightInfo ? 0 : yIncrement * .5f), color, "Z",
+                              "%.2f", pawn->Location.Z * 0.01f);
 
             if (showTopHeightInfo) {
-                float height = pawn->Location.Z / 100.0f;
+                float height = pawn->Location.Z * 0.01f;
 
-                if (pawn->WorldInfo->RealTimeSeconds - topHeightTimeHit > topHeightResetAfterSeconds) {
+                if (pawn->WorldInfo->RealTimeSeconds - topHeightTimeHit >
+                    topHeightResetAfterSeconds) {
                     topHeight = 0.0f;
                     topHeightTimeHit = 0.0f;
                 }
@@ -722,7 +754,8 @@ static void OnRender(IDirect3DDevice9 *) {
                     topHeightTimeHit = pawn->WorldInfo->RealTimeSeconds;
                 }
 
-                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + yIncrement / 2, color, "ZT", "%.2f", topHeight);
+                AddTextToDrawList(window->DrawList, width, rightPadding, y,
+                                  yIncrement + yIncrement / 2, color, "ZT", "%.2f", topHeight);
             }
 
             float speed = sqrtf(powf(pawn->Velocity.X, 2) + powf(pawn->Velocity.Y, 2)) * 0.036f;
@@ -737,23 +770,40 @@ static void OnRender(IDirect3DDevice9 *) {
                 topSpeedTimeHit = pawn->WorldInfo->RealTimeSeconds;
             }
 
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "V", "%.2f", speed);
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + yIncrement / 2, color, "VT", "%.2f", topSpeed);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "V",
+                              "%.2f", speed);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + yIncrement / 2,
+                              color, "VT", "%.2f", topSpeed);
 
-            float pitch = (static_cast<float>(controller->Rotation.Pitch % 0x10000) / static_cast<float>(0x10000)) * 360.0f;
+            float pitch = (static_cast<float>(controller->Rotation.Pitch % 0x10000) /
+                           static_cast<float>(0x10000)) *
+                          360.0f;
             pitch = pitch == 0.0f ? pitch : pitch > 180.0f ? pitch - 360.0f + 0.01f : pitch + 0.01f;
 
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "RX", "%.2f", pitch);
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + yIncrement / 2, color, "RY", "%.2f", (static_cast<float>(controller->Rotation.Yaw % 0x10000) / static_cast<float>(0x10000)) * 360.0f);
-            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "T", "%.2f", checkpointTime);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "RX",
+                              "%.2f", pitch);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + yIncrement / 2,
+                              color, "RY", "%.2f",
+                              (static_cast<float>(controller->Rotation.Yaw % 0x10000) /
+                               static_cast<float>(0x10000)) *
+                                  360.0f);
+            AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "T",
+                              "%.2f", checkpointTime);
 
             if (showExtraPlayerInfo) {
-                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "S", "%d", pawn->MovementState.GetValue());
-                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "H", "%d", pawn->Health);
-                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement + yIncrement / 2, color, "RT", "%.2f", min(100.00f, controller->ReactionTimeEnergy));
+                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "S",
+                                  "%d", pawn->MovementState.GetValue());
+                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "H",
+                                  "%d", pawn->Health);
+                AddTextToDrawList(window->DrawList, width, rightPadding, y,
+                                  yIncrement + yIncrement / 2, color, "RT", "%.2f",
+                                  min(100.00f, controller->ReactionTimeEnergy));
 
-                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "SZ", "%.2f", pawn->LastJumpLocation.Z / 100.0f);
-                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "SZD", "%.2f", (pawn->Location.Z - pawn->LastJumpLocation.Z) / 100.0f);
+                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color, "SZ",
+                                  "%.2f", pawn->LastJumpLocation.Z / 100.0f);
+                AddTextToDrawList(window->DrawList, width, rightPadding, y, yIncrement, color,
+                                  "SZD", "%.2f",
+                                  (pawn->Location.Z - pawn->LastJumpLocation.Z) / 100.0f);
             }
 
             ImGui::EndRawScene();
@@ -781,13 +831,11 @@ static void OnRender(IDirect3DDevice9 *) {
         const auto &io = ImGui::GetIO();
         const auto width = ImGui::CalcTextSize(text.c_str(), nullptr, false).x;
 
-        window->DrawList->AddRectFilled(
-            ImVec2(io.DisplaySize.x - width - padding, 0),
-            ImVec2(io.DisplaySize.x, ImGui::GetTextLineHeight()),
-            ImColor(ImVec4(0, 0, 0, 0.4f)));
+        window->DrawList->AddRectFilled(ImVec2(io.DisplaySize.x - width - padding, 0),
+                                        ImVec2(io.DisplaySize.x, ImGui::GetTextLineHeight()),
+                                        ImColor(ImVec4(0, 0, 0, 0.4f)));
         window->DrawList->AddText(ImVec2(io.DisplaySize.x - width, 0),
-                                  ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f)),
-                                  text.c_str());
+                                  ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f)), text.c_str());
 
         ImGui::EndRawScene();
     }
@@ -808,7 +856,7 @@ static void OnTick(float deltaTime) {
             hasCheckpoint = true;
             checkpointTime = 0.0f;
             checkpointLocation = pawn->Location;
-        } 
+        }
 
         if (hasCheckpoint) {
             if (Distance(pawn->Location, checkpointLocation) > 1.0f && checkpointUpdateTimer) {
@@ -870,8 +918,7 @@ static void OnTick(float deltaTime) {
                 static_cast<float>(Engine::IsKeyDown(fly.DownKeybind)),
         };
 
-        const auto mag =
-            sqrt(input.X * input.X + input.Y * input.Y + input.Z * input.Z);
+        const auto mag = sqrt(input.X * input.X + input.Y * input.Y + input.Z * input.Z);
 
         if (mag != 0.0f) {
             input.X /= mag;
@@ -889,14 +936,11 @@ static void OnTick(float deltaTime) {
         }
 
         const auto angle =
-            (static_cast<float>(controller->Rotation.Yaw % 0x10000) /
-             static_cast<float>(0x10000)) *
+            (static_cast<float>(controller->Rotation.Yaw % 0x10000) / static_cast<float>(0x10000)) *
             (2 * CONST_Pi);
 
-        fly.Velocity.X +=
-            ((cosf(angle) * input.X) - (sinf(angle) * input.Y)) * fly.Speed;
-        fly.Velocity.Y +=
-            ((sinf(angle) * input.X) + (cosf(angle) * input.Y)) * fly.Speed;
+        fly.Velocity.X += ((cosf(angle) * input.X) - (sinf(angle) * input.Y)) * fly.Speed;
+        fly.Velocity.Y += ((sinf(angle) * input.X) + (cosf(angle) * input.Y)) * fly.Speed;
         fly.Velocity.Z += input.Z * fly.Speed;
 
         fly.Location.X += fly.Velocity.X;
@@ -933,8 +977,7 @@ static void OnTick(float deltaTime) {
             }
             beamer = false;
 
-        } else if (sqrt(powf(pawn->Velocity.X, 2) + powf(pawn->Velocity.Y, 2)) >
-                   1000.0f) {
+        } else if (sqrt(powf(pawn->Velocity.X, 2) + powf(pawn->Velocity.Y, 2)) > 1000.0f) {
 
             if (sidestepBeamer) {
                 controller->PlayerInput->Jump();
@@ -950,8 +993,7 @@ static void OnTick(float deltaTime) {
     }
 }
 
-void __fastcall StateHandlerHook(void *pawn, void *idle, float delta,
-                                 int changedState) {
+void __fastcall StateHandlerHook(void *pawn, void *idle, float delta, int changedState) {
 
     if (pawn && pawn == Engine::GetPlayerPawn() && strang && changedState) {
         const auto controller = Engine::GetPlayerController();
@@ -998,9 +1040,12 @@ bool Trainer::Initialize() {
     sidestepBeamer = Settings::GetSetting("trainer", "sidestepBeamer", false);
     sidestepBeamerForMe = Settings::GetSetting("trainer", "sidestepBeamerForMe", false);
     sidestepBeamerLeftKeybind = Settings::GetSetting("trainer", "sidestepBeamerLeftKeybind", VK_A);
-    sidestepBeamerRightKeybind = Settings::GetSetting("trainer", "sidestepBeamerRightKeybind", VK_D);
-    sidestepBeamerPressLeftKeybind = Settings::GetSetting("trainer", "sidestepBeamerPressLeftKeybind", true);
-    sidestepBeamerPressRightKeybind = Settings::GetSetting("trainer", "sidestepBeamerPressRightKeybind", false);
+    sidestepBeamerRightKeybind =
+        Settings::GetSetting("trainer", "sidestepBeamerRightKeybind", VK_D);
+    sidestepBeamerPressLeftKeybind =
+        Settings::GetSetting("trainer", "sidestepBeamerPressLeftKeybind", true);
+    sidestepBeamerPressRightKeybind =
+        Settings::GetSetting("trainer", "sidestepBeamerPressRightKeybind", false);
 
     // Functions
     Menu::AddTab("Trainer", TrainerTab);
@@ -1032,8 +1077,7 @@ bool Trainer::Initialize() {
                     const auto controller = Engine::GetPlayerController();
 
                     if (pawn && controller &&
-                        pawn->MovementState ==
-                            Classes::EMovement::MOVE_FallingUncontrolled) {
+                        pawn->MovementState == Classes::EMovement::MOVE_FallingUncontrolled) {
 
                         if (pawn->Health > 0) {
                             pawn->InitialState = "Walking";
@@ -1042,14 +1086,13 @@ bool Trainer::Initialize() {
                             controller->SetInitialState();
 
                             pawn->StopAllCustomAnimations(0.0f);
-                            pawn->SetMove(Classes::EMovement::MOVE_Walking, false,
-                                          false);
+                            pawn->SetMove(Classes::EMovement::MOVE_Walking, false, false);
 
                             pawn->SetIgnoreLookInput(false);
                             pawn->SetIgnoreMoveInput(false);
                             controller->IgnoreButtonInput(false);
                             controller->IgnoreLookInput(false);
-                            controller->IgnoreMoveInput(false); 
+                            controller->IgnoreMoveInput(false);
                         } else {
                             god = false;
                         }
@@ -1072,8 +1115,7 @@ bool Trainer::Initialize() {
                             controller->SetInitialState();
 
                             pawn->StopAllCustomAnimations(0.0f);
-                            pawn->SetMove(Classes::EMovement::MOVE_Walking, false,
-                                          false);
+                            pawn->SetMove(Classes::EMovement::MOVE_Walking, false, false);
 
                             pawn->SetIgnoreLookInput(false);
                             pawn->SetIgnoreMoveInput(false);
@@ -1083,7 +1125,7 @@ bool Trainer::Initialize() {
 
                             fly.Velocity = {0};
                             fly.Location = pawn->Location;
-                        
+
                             if (resetFlyingSpeed) {
                                 fly.Speed = fly.DefaultSpeed;
                             }
@@ -1120,10 +1162,10 @@ bool Trainer::Initialize() {
                 if (keycode == beamerKeybind) {
                     const auto pawn = Engine::GetPlayerPawn();
 
-                    if (pawn && pawn->MovementState ==
-                                    Classes::EMovement::MOVE_WallClimbing) {
+                    if (pawn && pawn->MovementState == Classes::EMovement::MOVE_WallClimbing) {
                         if (sidestepBeamer && sidestepBeamerForMe) {
-                            PressKey(sidestepBeamerPressLeftKeybind ? sidestepBeamerLeftKeybind : sidestepBeamerRightKeybind);
+                            PressKey(sidestepBeamerPressLeftKeybind ? sidestepBeamerLeftKeybind
+                                                                    : sidestepBeamerRightKeybind);
                         }
                         beamer = true;
                     }
@@ -1136,20 +1178,19 @@ bool Trainer::Initialize() {
         }
     });
 
-    const auto stateHandler = Pattern::FindPattern(
-        "\xF3\x0F\x10\x05\x00\x00\x00\x00\x83\xEC\x0C\x0F\x2F\x44\x24\x00\x56"
-        "\x0F\x87\x00\x00\x00\x00\x8B\x44\x24\x18\x83\xF8\x07\x0F\x8F\x00\x00"
-        "\x00\x00\x0F\xB6\x51\x68\x81\xA1\x00\x00\x00\x00\x00\x00\x00\x00",
-        "xxxx????xxxxxxx?xxx????xxxxxxxxx????xxxxxx????????");
+    const auto stateHandler =
+        Pattern::FindPattern("\xF3\x0F\x10\x05\x00\x00\x00\x00\x83\xEC\x0C\x0F\x2F\x44\x24\x00\x56"
+                             "\x0F\x87\x00\x00\x00\x00\x8B\x44\x24\x18\x83\xF8\x07\x0F\x8F\x00\x00"
+                             "\x00\x00\x0F\xB6\x51\x68\x81\xA1\x00\x00\x00\x00\x00\x00\x00\x00",
+                             "xxxx????xxxxxxx?xxx????xxxxxxxxx????xxxxxx????????");
 
     if (!stateHandler) {
         MessageBoxA(0, "Failed to find StateHandler", "Failure", 0);
         return false;
     }
 
-    if (!Hook::TrampolineHook(
-            StateHandlerHook, stateHandler,
-            reinterpret_cast<void **>(&StateHandlerOriginal))) {
+    if (!Hook::TrampolineHook(StateHandlerHook, stateHandler,
+                              reinterpret_cast<void **>(&StateHandlerOriginal))) {
 
         MessageBoxA(0, "Failed to hook StateHandler", "Failure", 0);
         return false;
