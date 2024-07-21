@@ -16,14 +16,20 @@
 #include <time.h>
 
 static json playerLog = json::array();
+static std::string filePath = "log.json";
+
 static int startLogKeybind = VK_J;
 static int stopLogKeybind = VK_K;
 static int saveLogKeybind = VK_L;
 static int clearLogKeybind = VK_0;
-static bool isLogging = false;
+
 static float logInterval = 0.2f;
 static float logTime = 0.f;
-static std::string filePath = "log.json";
+
+static bool isLogging = false;
+static bool firstTimestamp = true;
+
+static std::chrono::time_point < std::chrono::system_clock, std::chrono::milliseconds> startTime;
 
 static float minDistance = 1;
 static Classes::EMovement prevState;
@@ -39,6 +45,8 @@ static void ShowMessage(std::string msg) {
 
 static void Clear() { 
     playerLog = json::array();
+    firstTimestamp = true;
+
     ShowMessage("Cleared Log!");
 }
 
@@ -58,11 +66,23 @@ static void Save() {
 
 static void AddEntry(Classes::EMovement state, Classes::FVector location) {
     auto now = std::chrono::system_clock::now();
-    std::string time = date::format("%T", date::floor<std::chrono::milliseconds>(now));
+    auto currTime = date::floor<std::chrono::milliseconds>(now);
+    
+    if (firstTimestamp) {
+        firstTimestamp = false;
+        startTime = currTime;
+    }
+
+    auto timeDiff = currTime - startTime;
+
+    std::string timestamp = date::format("%T", timeDiff);
 
     json entry;
-    entry["timestamp"] = time;
-    entry["player_state"] = state;
+
+    entry["timestamp"] = timestamp;
+    entry["state"] = state;
+
+    // Location in meters
     entry["location"]["x"] = location.X * 0.01f;
     entry["location"]["y"] = location.Y * 0.01f;
     entry["location"]["z"] = location.Z * 0.01f;
@@ -82,12 +102,13 @@ static void LogPlayerState(float deltaTime) {
     auto currState = pawn->MovementState.GetValue();
     auto currLocation = pawn->Location;
 
+    logTime += deltaTime;
+
     if (prevState != currState) {
         prevState = currState;
+        logTime = 0.f;
         doLog = true;
     }
-
-    logTime += deltaTime;
 
     if (logTime >= logInterval) {
         logTime = 0.f;
@@ -157,6 +178,7 @@ static void OnRender(IDirect3DDevice9 *) {
         window->DrawList->AddRectFilled(ImVec2(io.DisplaySize.x - size.x - padding, 0),
                                         ImVec2(io.DisplaySize.x, ImGui::GetTextLineHeight() * 1.2f),
                                         ImColor(ImVec4(0, 0, 0, 0.4f * opacity)));
+
         window->DrawList->AddText(ImVec2(io.DisplaySize.x - size.x, 0),
                                   ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f * opacity)),
                                   message.c_str());
@@ -168,8 +190,8 @@ static void OnRender(IDirect3DDevice9 *) {
 bool Logging::Initialize() {
     startLogKeybind = Settings::GetSetting("logging", "startLogKeybind", VK_J);
     stopLogKeybind = Settings::GetSetting("logging", "stopLogKeybind", VK_K);
-    saveLogKeybind = Settings::GetSetting("logging", "saveLogKeybind", VK_L);
-    clearLogKeybind = Settings::GetSetting("logging", "clearLogKeybind", VK_0);
+    saveLogKeybind = Settings::GetSetting("logging", "saveLogKeybind", VK_O);
+    clearLogKeybind = Settings::GetSetting("logging", "clearLogKeybind", VK_BACK);
 
     logInterval = Settings::GetSetting("logging", "logInterval", 0.2f);
     minDistance = Settings::GetSetting("logging", "minDistance", 1.f);
